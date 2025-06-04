@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Prolog животни с различни правила и GIF</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 700px;
+      margin: 30px auto;
+      background: #f9f9f9;
+      color: #333;
+      padding: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      text-align: center;
+    }
+    textarea {
+      width: 90%;
+      max-width: 600px;
+      height: 120px;
+      font-family: monospace;
+      font-size: 16px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 2px solid #007acc;
+      padding: 8px;
+      resize: vertical;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 25px;
+      font-size: 18px;
+      background-color: #007acc;
+      border: none;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #005f99;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      min-height: 30px;
+      font-weight: bold;
+      color: #004a99;
+    }
+    .animal-container {
+      margin-top: 30px;
+      min-height: 160px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #d0e8ff;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #a0c4ff;
+    }
+    .animal-gif {
+      max-width: 180px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #005f99;
+    }
+  </style>
+</head>
+<body>
+  <h1>Задание: Програма с Prolog за животни и GIF визуализация</h1>
+
+  
+
+
+  <h1>Prolog животни с различни правила и GIF</h1>
+
+  <textarea id="prolog-input">
+% Примери на заявки:
+is_mammal(X).
+is_big(X).
+is_predator(X).
+  </textarea><br />
+  <button onclick="runProlog()">Изпълни</button>
+
+  <div id="result"></div>
+  <div class="animal-container" id="animal-animation"></div>
+
+  <script src="https://unpkg.com/tau-prolog"></script>
+  <script>
+    const session = pl.create();
+
+    // Разширена база знания с животни и правила
+    const knowledge = `
+      car(ford).
+car(toyota).
+car(bmw).
+car(audi).
+car(tesla).
+car(mercedes).
+
+% Видове (например, електрически)
+electric(ford).
+electric(tesla).
+
+% Големи автомобили (например, SUV)
+big(toyota).
+big(mercedes).
+
+% Спортни коли
+sports_car(bmw).
+sports_car(audi).
+
+% Правила
+is_electric(X) :- electric(X).
+is_big(X) :- big(X).
+is_sports_car(X) :- sports_car(X).
+
+    `;
+
+    session.consult(knowledge);
+
+    const animalAnimations = {
+      ford: '<img src=https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExeG9ocXk2Mmt3M20xZ3FoZnM3Z2VsanptbnpwejcwdzVubjgybGFicSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/V8qIP5XoPPmZa/giphy.gif" class="car-gif" alt="Ford анимация" />',
+      toyota: '<img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdjE5djE0c2w1bDJ6dXM1NTMxZWp1OXFhbzFvbnloOXk5M3Y0dXE0MyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/l0G18bMiyWTP0B476/giphy.gif" class="car-gif" alt="Toyota анимация" />',
+      bmw: '<img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWpwb2xtZnU2eHU2amlwc2FxMTg3bXpkb2J6d2QzYmFqZGF1YzE5OCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/yEWNsqrj8K7acGcCeo/giphy.gif" class="car-gif" alt="BMW анимация" />',
+      audi: '<img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYjkxN2o0b3Y5YWdvMWhjbWFocWNtNnU0ZTF4Z3J2NDhlaXZ2bWdsNSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/l46CwlES1UnwgqsaQ/giphy.gif" class="car-gif" alt="Audi анимация" />',
+      mercedes: '<img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNXBvMmlmc2N3a3U2OW9ldDhqdjk2eXk0Z3VkeW9mYXl2cXhoZHBydiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/xULW8Ci2bSLTNV4LIc/giphy.gif" alt="Mercedes анимация" />',
+      tesla: '<img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3huZndvcGVsMHF2ZjdqYncxcGYwOTV4d2ljZXk0YTVvdmcyMDljMyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/H7rpSYHRyYgamxQNqw/giphy.gif" class="car-gif" alt="Tesla анимация" />'
+    };
+
+    function runProlog() {
+      const input = document.getElementById("prolog-input").value;
+      const resultDiv = document.getElementById("result");
+      const animDiv = document.getElementById("animal-animation");
+
+      resultDiv.innerHTML = "";
+      animDiv.innerHTML = "";
+
+      session.query(input);
+      session.answers(answer => {
+        if(answer === false) {
+          resultDiv.innerHTML += `<p>Няма повече резултати.</p>`;
+          return;
+        }
+        const str = pl.format_answer(answer);
+        if (str === "false.") {
+          resultDiv.innerHTML = "<p>Няма резултати за тази заявка.</p>";
+          return;
+        }
+        resultDiv.innerHTML += `<p>${str}</p>`;
+
+        const match = str.match(/X = (\w+)/);
+        if (match) {
+          const animal = match[1];
+          if (animalAnimations[animal]) {
+            animDiv.innerHTML = animalAnimations[animal];
+          } else {
+            animDiv.innerHTML = "<p>Няма GIF за това животно.</p>";
+          }
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
